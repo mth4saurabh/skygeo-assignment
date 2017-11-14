@@ -1,50 +1,85 @@
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
-from api.models import User
-from api.serializers import ApiSerializer
+from rest_framework import generics, viewsets
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+from rest_framework.decorators import api_view, detail_route
+from api.models import *
+from api.serializers import *
 
-@csrf_exempt
-def user_list(request):
+
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'bookers': reverse('booker-list', request=request, format=format),
+        'booking_items': reverse('booking_item-list', request=request, format=format),
+        'bookings': reverse('booking-list', request=request, format=format),
+        'items': reverse('item-list', request=request, format=format),
+        'products': reverse('product-list', request=request, format=format),
+        'spaces': reverse('space-list', request=request, format=format),
+        'users': reverse('user-list', request=request, format=format),
+        'venues': reverse('venue-list', request=request, format=format),
+    })
+
+
+class BookerViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    List all code users, or create a new user.
+    This viewset automatically provides `list` and `detail` actions.
     """
-    if request.method == 'GET':
-        users = User.objects.all()
-        serializer = ApiSerializer(users, many=True)
-        return JsonResponse(serializer.data, safe=False)
+    queryset = Bookers.objects.all()
+    serializer_class = BookerSerializer
 
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = ApiSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
 
-@csrf_exempt
-def user_detail(request, pk):
+class BookingItemViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    Retrieve, update or delete a code user.
+    This viewset automatically provides `list` and `detail` actions.
     """
-    try:
-        user = User.objects.get(pk=pk)
-    except User.DoesNotExist:
-        return HttpResponse(status=404)
+    queryset = BookingItems.objects.all()
+    serializer_class = BookingItemSerializer
 
-    if request.method == 'GET':
-        serializer = ApiSerializer(user)
-        return JsonResponse(serializer.data)
 
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = ApiSerializer(user, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
+class BookingViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    This viewset automatically provides `list` and `detail` actions.
+    """
+    queryset = Bookings.objects.all()
+    serializer_class = BookingSerializer
 
-    elif request.method == 'DELETE':
-        user.delete()
-        return HttpResponse(status=204)
+
+class ItemViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    This viewset automatically provides `list` and `detail` actions.
+    """
+    queryset = Items.objects.all()
+    serializer_class = ItemSerializer
+
+
+class ProductViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    This viewset automatically provides `list` and `detail` actions.
+    """
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
+
+
+class SpaceViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    This viewset automatically provides `list` and `detail` actions.
+    """
+    queryset = Spaces.objects.all()
+    serializer_class = SpaceSerializer
+
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    This viewset automatically provides `list` and `detail` actions.
+    """
+    queryset = Users.objects.all()
+    serializer_class = UserSerializer
+
+
+class VenueViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    This viewset automatically provides `list` and `detail` actions.
+    """
+    queryset = Venues.objects.all()
+    serializer_class = VenueSerializer
