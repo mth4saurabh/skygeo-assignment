@@ -8,10 +8,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'first_name', 'last_name', 'email', 'registered')
 
 
-class BookerSerializer(serializers.ModelSerializer):
+class BookerSerializer(serializers.HyperlinkedModelSerializer):
+    user = serializers.HyperlinkedRelatedField(many=False, view_name='users-detail', read_only=True)
+
     class Meta:
         model = Bookers
-        fields = ('id', 'user_id', 'created')
+        fields = ('id', 'user', 'created')
 
 
 class BookingItemSerializer(serializers.HyperlinkedModelSerializer):
