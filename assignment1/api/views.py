@@ -1,5 +1,6 @@
 from rest_framework import generics, viewsets
 from rest_framework.response import Response
+from rest_framework.filters import SearchFilter
 from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view, detail_route
 from api.models import *
@@ -35,6 +36,11 @@ class BookingItemViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = BookingItems.objects.all()
     serializer_class = BookingItemSerializer
+    filter_backends = (SearchFilter,)
+    search_fields = ('booking__id', 'booking__booker__user__first_name',
+                    'booking__booker__user__last_name',
+                    'booking__booker__user__email',
+                    'item__name', 'item__venue__name')
 
 
 class BookingViewSet(viewsets.ReadOnlyModelViewSet):
