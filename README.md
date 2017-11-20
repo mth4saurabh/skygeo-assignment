@@ -1,66 +1,122 @@
-# Full-Stack Developer Test
+# Full-Stack Developer Test Solution
 
-Hi Full-stacker!
+This README explains how to setup REST API (django) and Single page application / Front-end (React) on local
 
-The exercise exists of a few assignments. They are related to the SkyGeo way of working.
+Note that both project are deployed on heroku:
 
-To complete these assignments you need to clone this repo. When you're done you can push your changes to your own repo (commit often!).
+* [API](https://skygeo-assignment1.herokuapp.com/api-auth/login/?next=/) - Please login using following credentials
+	```
+	Username: skygeo
+	Password: skygeo2017
+	```
+* [Web App](http://skygeo-assignment2.herokuapp.com/) - Front end displaying all the data provided with the assignment, one can filter through data using search functionality on top
 
+## Getting Started
 
-## Assignment 1: Build a REST API with Django
+* Folder `assignment/` contains SQL data and some PHP application code for reference. 
+* Folder `assignment1/django/` contains REST API build with django (using Django rest framework)
+* Folder `assignment2/client/` contains single page application (using React) as Front-End to consume API built in assignment 1
 
-In this exercise we have an example database structure and the dummy data to fill the database. You are free to choose any database you are most comfortable working with.
+### Prerequisites
 
-The PHP models and some extra PHP application code are just for your reference.
+* Pip
+* Virtualenv
+* Python 2.7
+	* Django
+	* Django rest framework
+* Node, npm for React dependencies
 
-The task is to setup a Django application with:
+## Installing
 
-* Model objects which represents the data structure in data/database.sql
-* Dump all the data of assignment/data.sql to the database your django generated
-* Authentication
-* A Django REST API so that it can serve assignment 2
-* Django admin site
-
-
-[New to django? No problem! Follow the tutorial to get started] (https://docs.djangoproject.com/en/1.11/intro/tutorial01/)
-Your resulting Django application should be placed in `assignment1/django/`. Make sure you pick a solution which is easily maintainable. If special software is needed to run the code make sure this is documented.
-
-
-## Assignment 2: Add a Front-End to your Django application
-
-Now you have written a simple API in Django you are going to add an index page to the it. The index page should be a SPA (Single Page Application). It's recommended to use frameworks like React or Angular for this purpose.
-
-The application should be a simple interface to view the data provided by the API. It should have at least the following features:
-
-* Overview of bookings
-  * Paginated
-  * The bookings should be searchable. Make them searchable on at least the following data:
-    * Booking ID
-    * Space name
-    * Product name
-    * Venue name
-    * Booker name / email
-* View one specific booking
-  * Make sure you show all relevant data of the booking:
-    * Booker
-    * Space
-    * Products
-    * Venue
-* The whole application should look nice and should be user friendly
-* The application should have possibilities to navigate between the different interfaces
-
-For the search function to work you probably need to extend the API with the search functionality.
-
-Note the following things:
-* It's allowed to use a CSS framework, however, you are encouraged to write your own (we want to see how you write CSS)
-* CSS pre-processors like SASS and LESS are recommended
-* Make sure your code is well structured and reusable
-* Bonus: making extra additions to the API
-  * API for spaces / products
-  * CRUD APIs
-  * Etc.
+A step by step series of examples that tell you have to get a development env running for both parts of assignment
 
 
-## Notes:
+### 1. API in Django
 
-Commit Often, Perfect Later, Publish Once
+Create a virtualenv to isolate our package dependencies locally:
+```
+virtualenv env
+source env/bin/activate  # On Windows use `env\Scripts\activate`
+```
+
+Install all the project dependencies:
+```
+cd assignment1/django
+pip install -r requirments.txt
+```
+
+Now sync your database for the first time and also create superuser. For consistency please use `username: skygeo` and `password: skygeo2017`	
+```
+python manage.py migrate
+python manage.py createsuperuser
+```
+
+Start server from command line (default port 8000):
+```
+python manage.py runserver
+```
+
+### 2. Front end in react
+
+Let's dive into client folder:
+```
+cd assignment2/client
+```
+
+Make sure you have all the dependencies install using `npm install`
+
+
+```
+// assignment2/client/package.json
+{
+	"name": "client",
+	"version": "0.1.0",
+	"private": true,
+	"dependencies": {
+	"bootstrap": "^4.0.0-beta",
+	"react": "^16.1.1",
+	"react-dom": "^16.1.1",
+	"react-scripts": "1.0.17",
+	"reactstrap": "^5.0.0-alpha.3"
+},
+"scripts": {
+	"start": "react-scripts start",
+	"build": "react-scripts build",
+	"test": "react-scripts test --env=jsdom",
+	"eject": "react-scripts eject"
+	}
+}
+```
+
+If superuser created in API doesn't have following credentials, you'll need to update Authorization in `assignment2/client/src/App.js`
+
+```
+username: skygeo
+password: skygeo2017
+```
+
+Run client side from command line (default port 3000):
+```
+npm run start
+```
+
+
+## Built With
+
+* [Django REST framework](http://www.django-rest-framework.org/) - The framework used for building API
+* [React](https://reactjs.org/) - Used for building frontend 
+* [Heroku](https://www.heroku.com/) - Used for staging both the applications above.
+
+## Caveats
+
+* For sake for simplicity & non complexity of the project I have skipped testing as it would involve running basic(copied) templates and won't reflect skills I want to show as full stack developer.
+* API documentation could be improved with third party packeges like [Swagger](https://swagger.io/).
+* I have also skipped API versioning which would be essential in real world scenario but can be skipped here. 
+
+## Authors
+
+* **Saurabh B**
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
